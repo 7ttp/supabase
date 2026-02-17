@@ -350,7 +350,7 @@ export const PublishAppSidePanel = ({
                           projects.
                         </span>
                       </div>
-                      <DocsButton href={`${DOCS_URL}/guides/platform/oauth-apps/oauth-scopes`} />
+                      <DocsButton href={`${DOCS_URL}/guides/integrations/build-a-supabase-oauth-integration/oauth-scopes`} />
                     </div>
 
                     <ScopesPanel scopes={scopes} setScopes={setScopes} />
