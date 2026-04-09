@@ -1,12 +1,11 @@
 import { useParams } from 'common'
+import { useUnifiedLogsPreview } from 'components/interfaces/App/FeaturePreview/FeaturePreviewContext'
+import { UnifiedLogs } from 'components/interfaces/UnifiedLogs/UnifiedLogs'
+import DefaultLayout from 'components/layouts/DefaultLayout'
+import { ProjectLayout } from 'components/layouts/ProjectLayout'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-
-import { useUnifiedLogsPreview } from '@/components/interfaces/App/FeaturePreview/FeaturePreviewContext'
-import { UnifiedLogs } from '@/components/interfaces/UnifiedLogs/UnifiedLogs'
-import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { ProjectLayout } from '@/components/layouts/ProjectLayout'
-import type { NextPageWithLayout } from '@/types'
+import type { NextPageWithLayout } from 'types'
 
 export const LogPage: NextPageWithLayout = () => {
   const router = useRouter()

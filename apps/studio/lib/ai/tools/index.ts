@@ -1,13 +1,12 @@
-import { ToolSet } from 'ai'
-import { IS_PLATFORM } from 'common'
-
+import { AiOptInLevel } from 'hooks/misc/useOrgOptedIntoAi'
 import { filterToolsByOptInLevel } from '../tool-filter'
 import { getFallbackTools } from './fallback-tools'
+import { ToolSet } from 'ai'
+import { IS_PLATFORM } from 'common'
 import { getIncidentTools } from './incident-tools'
 import { getMcpTools } from './mcp-tools'
 import { getSchemaTools } from './schema-tools'
 import { getStudioTools } from './studio-tools'
-import { AiOptInLevel } from '@/hooks/misc/useOrgOptedIntoAi'
 
 export const getTools = async ({
   projectRef,

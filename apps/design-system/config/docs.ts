@@ -512,11 +512,6 @@ export const docsConfig: DocsConfig = {
           href: '/docs/components/expanding-textarea',
           items: [],
         },
-        {
-          title: 'Keyboard Shortcut',
-          href: '/docs/components/keyboard-shortcut',
-          items: [],
-        },
       ],
     },
   ],

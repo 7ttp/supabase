@@ -1,5 +1,7 @@
+import AlertError from 'components/ui/AlertError'
 import type { ComponentProps } from 'react'
 import { useMemo } from 'react'
+import type { ChartIntervals } from 'types'
 import { Button } from 'ui'
 import { Chart, ChartActions, ChartLoadingState, ChartMetric } from 'ui-patterns/Chart'
 import { PageContainer } from 'ui-patterns/PageContainer'
@@ -22,8 +24,6 @@ import {
 } from './EdgeFunctionOverview.utils'
 import type { InvocationChartDatum, InvocationUpdateAnnotation } from './EdgeFunctionOverview.utils'
 import { toAlertError } from './EdgeFunctionRecentErrors.utils'
-import AlertError from '@/components/ui/AlertError'
-import type { ChartIntervals } from '@/types'
 
 interface EdgeFunctionInvocationsSectionProps {
   interval: string

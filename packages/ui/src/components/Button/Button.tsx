@@ -157,7 +157,7 @@ const buttonVariants = cva(
   }
 )
 
-const IconContainerVariants = cva('inline-flex items-center justify-center shrink-0', {
+const IconContainerVariants = cva('', {
   variants: {
     size: {
       tiny: '[&_svg]:h-[14px] [&_svg]:w-[14px]',

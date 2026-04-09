@@ -26,10 +26,6 @@ export function CopyPromptAdmonition({ stepsContainerRef }: CopyPromptAdmonition
         element.remove()
       })
 
-    clone.querySelectorAll('p, div').forEach((el) => {
-      el.appendChild(document.createTextNode('\n'))
-    })
-
     const text = clone.textContent ?? ''
     return normalizeTextLines(text)
   }
@@ -145,7 +141,15 @@ export function CopyPromptAdmonition({ stepsContainerRef }: CopyPromptAdmonition
 
       <div className="relative flex flex-col md:flex-row md:items-center gap-y-2 md:gap-x-8 justify-between">
         <div className="flex flex-col gap-y-0.5">
-          <p className="heading-default">Give your agent everything it needs</p>
+          <div className="flex flex-col gap-y-2 items-start">
+            <Badge variant="success" className="-ml-0.5">
+              Skip the steps
+            </Badge>
+            <p className="heading-default">Prompt your agent</p>
+          </div>
+          <p className="text-sm text-foreground-lighter text-balance max-w-72">
+            Copy a prompt with everything your agent needs to connect your app for you.
+          </p>
         </div>
       </div>
     </Admonition>

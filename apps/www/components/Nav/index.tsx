@@ -59,7 +59,6 @@ const Nav = ({ hideNavbar, stickyNavbar = true }: Props) => {
   const isLaunchWeek12Page = pathname === '/launch-week/12'
   const isLaunchWeek13Page = pathname === '/launch-week/13'
   const isGAWeekSection = pathname?.startsWith('/ga-week')
-  const isStateOfStartupsPage = pathname?.startsWith('/state-of-startups')
   const disableStickyNav =
     isLaunchWeekXPage ||
     isGAWeekSection ||
@@ -68,16 +67,6 @@ const Nav = ({ hideNavbar, stickyNavbar = true }: Props) => {
     isLaunchWeek13Page ||
     !stickyNavbar
   const showLaunchWeekNavMode = (isGAWeekSection || isLaunchWeekXPage) && !open
-
-  const [scrolled, setScrolled] = React.useState(false)
-  React.useEffect(() => {
-    if (!isStateOfStartupsPage) return
-    const handleScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isStateOfStartupsPage])
-
-  const isTransparent = isStateOfStartupsPage && !scrolled && !open
 
   React.useEffect(() => {
     if (open) {
@@ -100,28 +89,21 @@ const Nav = ({ hideNavbar, stickyNavbar = true }: Props) => {
   return (
     <>
       <div
-        className={cn(
-          'sticky top-0 z-40 transform',
-          disableStickyNav && 'relative',
-          isStateOfStartupsPage && 'fixed left-0 right-0'
-        )}
+        className={cn('sticky top-0 z-40 transform', disableStickyNav && 'relative')}
         style={{ transform: 'translate3d(0,0,999px)' }}
-        data-nav-transparent={isTransparent ? '' : undefined}
       >
         <div
           className={cn(
-            'absolute inset-0 h-full w-full bg-background/90 dark:bg-background/95 transition-all duration-300',
-            !showLaunchWeekNavMode && !isTransparent && '!opacity-100',
-            showLaunchWeekNavMode && '!bg-transparent dark:!bg-black',
-            isGAWeekSection && 'dark:!bg-alternative',
-            isTransparent && '!bg-transparent dark:!bg-transparent !opacity-100'
+            'absolute inset-0 h-full w-full bg-background/90 dark:bg-background/95',
+            !showLaunchWeekNavMode && '!opacity-100 transition-opacity',
+            showLaunchWeekNavMode && '!bg-transparent dark:!bg-black transition-all',
+            isGAWeekSection && 'dark:!bg-alternative'
           )}
         />
         <nav
           className={cn(
-            `relative z-40 border-default border-b backdrop-blur-sm transition-all duration-300`,
-            showLaunchWeekNavMode && 'border-muted border-b bg-transparent',
-            isTransparent && 'border-transparent backdrop-blur-none'
+            `relative z-40 border-default border-b backdrop-blur-sm transition-opacity`,
+            showLaunchWeekNavMode && 'border-muted border-b bg-transparent'
           )}
         >
           <div className="relative flex justify-between h-16 mx-auto lg:container lg:px-16 xl:px-20">

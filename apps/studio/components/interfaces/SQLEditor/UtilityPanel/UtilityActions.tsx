@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  KeyboardShortcut,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -114,12 +113,9 @@ const UtilityActions = ({
               </DropdownMenuItem>
             </>
           )}
-          <DropdownMenuItem className="justify-between" onClick={prettifyQuery}>
-            <span className="flex items-center gap-x-2">
-              <AlignLeft size={14} strokeWidth={2} className="text-foreground-light" />
-              Prettify SQL
-            </span>
-            <KeyboardShortcut keys={['Alt', 'Shift', 'f']} />
+          <DropdownMenuItem className="gap-x-2" onClick={prettifyQuery}>
+            <AlignLeft size={14} strokeWidth={2} className="text-foreground-light" />
+            Prettify SQL
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -177,12 +173,7 @@ const UtilityActions = ({
               icon={<AlignLeft strokeWidth={2} className="text-foreground-light" />}
             />
           </TooltipTrigger>
-          <TooltipContent side="bottom" className="p-1 pl-2.5">
-            <div className="flex items-center gap-2.5">
-              <span>Prettify SQL</span>
-              <KeyboardShortcut keys={['Alt', 'Shift', 'f']} />
-            </div>
-          </TooltipContent>
+          <TooltipContent side="bottom">Prettify SQL</TooltipContent>
         </Tooltip>
       </div>
 
@@ -203,7 +194,7 @@ const UtilityActions = ({
             hasSelection={hasSelection}
             isDisabled={isDisabled || isExecuting}
             isExecuting={isExecuting}
-            className="rounded-l-none"
+            className="rounded-l-none min-w-[82px]"
             onClick={executeQuery}
           />
         </div>

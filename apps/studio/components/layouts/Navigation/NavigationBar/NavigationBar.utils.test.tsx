@@ -140,8 +140,19 @@ describe('generateOtherRoutes', () => {
     expect(keys(routes)).not.toContain('observability')
   })
 
-  it('does not include API Docs nav item', () => {
-    const routes = generateOtherRoutes(REF, activeProject, { isPlatform: true })
+  it('includes API Docs when apiDocsSidePanel is enabled', () => {
+    const routes = generateOtherRoutes(REF, activeProject, {
+      isPlatform: true,
+      apiDocsSidePanel: true,
+    })
+    expect(keys(routes)).toContain('api')
+  })
+
+  it('excludes API Docs when apiDocsSidePanel is disabled', () => {
+    const routes = generateOtherRoutes(REF, activeProject, {
+      isPlatform: true,
+      apiDocsSidePanel: false,
+    })
     expect(keys(routes)).not.toContain('api')
   })
 

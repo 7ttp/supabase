@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_KEYS, mergeRefs, useParams } from 'common'
+import { useResourceWarningsQuery } from 'data/usage/resource-warnings-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -41,7 +42,6 @@ import { ProjectAPIDocs } from '@/components/interfaces/ProjectAPIDocs/ProjectAP
 import { BannerFreeMicroUpgrade } from '@/components/ui/BannerStack/Banners/BannerFreeMicroUpgrade'
 import { BANNER_ID, useBannerStack } from '@/components/ui/BannerStack/BannerStackProvider'
 import { ResourceExhaustionWarningBanner } from '@/components/ui/ResourceExhaustionWarningBanner/ResourceExhaustionWarningBanner'
-import { useResourceWarningsQuery } from '@/data/usage/resource-warnings-query'
 import { useCustomContent } from '@/hooks/custom-content/useCustomContent'
 import { useLocalStorageQuery } from '@/hooks/misc/useLocalStorage'
 import { useSelectedOrganizationQuery } from '@/hooks/misc/useSelectedOrganization'

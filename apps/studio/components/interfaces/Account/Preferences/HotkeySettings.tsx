@@ -87,14 +87,14 @@ export const HotkeySettings = () => {
               form={form}
               name="aiAssistantEnabled"
               keys={['Meta', 'i']}
-              label="AI Assistant panel"
+              label="AI Assistant Panel"
               onToggle={setAiAssistantEnabled}
             />
             <HotkeyToggle
               form={form}
               name="inlineEditorEnabled"
               keys={['Meta', 'e']}
-              label="Inline SQL Editor panel"
+              label="Inline SQL Editor Panel"
               onToggle={setInlineEditorEnabled}
             />
             <HotkeyToggle

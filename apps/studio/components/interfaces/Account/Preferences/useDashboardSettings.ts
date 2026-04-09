@@ -1,6 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from 'common'
-
-import { useLocalStorageQuery } from '@/hooks/misc/useLocalStorage'
+import { useLocalStorageQuery } from 'hooks/misc/useLocalStorage'
 
 export const useIsInlineEditorSetting = () => {
   const [inlineEditorEnabled, setInlineEditorEnabled] = useLocalStorageQuery(

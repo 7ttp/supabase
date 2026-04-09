@@ -29,6 +29,7 @@ import {
 
 import { Route } from '../ui/ui.types'
 import {
+  useIsAPIDocsSidePanelEnabled,
   useIsPlatformWebhooksEnabled,
   useUnifiedLogsPreview,
 } from './App/FeaturePreview/FeaturePreviewContext'
@@ -224,6 +225,7 @@ const ProjectLinks = () => {
   const showReports = useIsFeatureEnabled('reports:all')
   const { mutate: sendEvent } = useSendEventMutation()
 
+  const isNewAPIDocsEnabled = useIsAPIDocsSidePanelEnabled()
   const platformWebhooksEnabled = useIsPlatformWebhooksEnabled()
   const { isEnabled: isUnifiedLogsEnabled } = useUnifiedLogsPreview()
 
@@ -254,6 +256,7 @@ const ProjectLinks = () => {
   const otherRoutes = generateOtherRoutes(ref, project, {
     unifiedLogs: isUnifiedLogsEnabled,
     showReports,
+    apiDocsSidePanel: isNewAPIDocsEnabled,
   })
   const settingsRoutes = generateSettingsRoutes(ref)
 
@@ -292,7 +295,41 @@ const ProjectLinks = () => {
       <Separator className="w-[calc(100%-1rem)] mx-auto" />
       <SidebarGroup className="gap-0.5">
         {otherRoutes.map((route, i) => {
-          if (route.key === 'advisors') {
+          if (route.key === 'api') {
+            const handleApiClick = () => {
+              if (isNewAPIDocsEnabled) {
+                snap.setShowProjectApiDocs(true)
+              }
+              sendEvent({
+                action: 'api_docs_opened',
+                properties: {
+                  source: 'sidebar',
+                },
+                groups: {
+                  project: ref ?? 'Unknown',
+                  organization: org?.slug ?? 'Unknown',
+                },
+              })
+            }
+
+            return (
+              <SideBarNavLink
+                key={route.key}
+                route={
+                  isNewAPIDocsEnabled
+                    ? {
+                        label: route.label,
+                        icon: route.icon,
+                        key: route.key,
+                        disabled: route.disabled,
+                      }
+                    : route
+                }
+                active={activeRoute === route.key}
+                onClick={handleApiClick}
+              />
+            )
+          } else if (route.key === 'advisors') {
             return (
               <div className="relative" key={route.key}>
                 {!route.disabled && (

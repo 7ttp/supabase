@@ -1,7 +1,6 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import { organizationKeys } from './keys'
-import type { CustomerAddress, CustomerTaxId } from './types'
 import { handleError, post } from '@/data/fetchers'
 import type { SubscriptionTier } from '@/data/subscriptions/types'
 import type { ResponseError, UseCustomQueryOptions } from '@/types'
@@ -9,15 +8,11 @@ import type { ResponseError, UseCustomQueryOptions } from '@/types'
 export type OrganizationBillingSubscriptionPreviewVariables = {
   organizationSlug?: string
   tier?: SubscriptionTier
-  address?: CustomerAddress
-  taxId?: CustomerTaxId
 }
 
 export async function previewOrganizationBillingSubscription({
   organizationSlug,
   tier,
-  address,
-  taxId,
 }: OrganizationBillingSubscriptionPreviewVariables) {
   if (!organizationSlug) throw new Error('organizationSlug is required')
   if (!tier) throw new Error('tier is required')
@@ -28,8 +23,6 @@ export async function previewOrganizationBillingSubscription({
       params: { path: { slug: organizationSlug } },
       body: {
         tier,
-        ...(address && { address }),
-        ...(taxId && { tax_id: taxId }),
       },
       headers: {
         Version: '2',
@@ -49,20 +42,15 @@ export type OrganizationBillingSubscriptionPreviewData = Awaited<
 export const useOrganizationBillingSubscriptionPreview = <
   TData = OrganizationBillingSubscriptionPreviewData,
 >(
-  { organizationSlug, tier, address, taxId }: OrganizationBillingSubscriptionPreviewVariables,
+  { organizationSlug, tier }: OrganizationBillingSubscriptionPreviewVariables,
   {
     enabled = true,
     ...options
   }: UseCustomQueryOptions<OrganizationBillingSubscriptionPreviewData, ResponseError, TData> = {}
 ) =>
   useQuery<OrganizationBillingSubscriptionPreviewData, ResponseError, TData>({
-    queryKey: organizationKeys.subscriptionPreview(organizationSlug, tier, {
-      address: address as Record<string, unknown> | undefined,
-      taxId: taxId as Record<string, unknown> | undefined,
-    }),
-    queryFn: () =>
-      previewOrganizationBillingSubscription({ organizationSlug, tier, address, taxId }),
+    queryKey: organizationKeys.subscriptionPreview(organizationSlug, tier),
+    queryFn: () => previewOrganizationBillingSubscription({ organizationSlug, tier }),
     enabled: enabled && typeof organizationSlug !== 'undefined' && typeof tier !== 'undefined',
-    placeholderData: keepPreviousData,
     ...options,
   })

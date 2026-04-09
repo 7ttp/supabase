@@ -39,14 +39,10 @@ export const FeaturePreviewContextProvider = ({ children }: PropsWithChildren<{}
     setFlags(
       featurePreviews.reduce((a, b) => {
         const defaultOptIn = b.isDefaultOptIn
-        try {
-          const localStorageValue = window.localStorage.getItem(b.key)
-          return {
-            ...a,
-            [b.key]: !localStorageValue ? defaultOptIn : localStorageValue === 'true',
-          }
-        } catch {
-          return { ...a, [b.key]: defaultOptIn }
+        const localStorageValue = localStorage.getItem(b.key)
+        return {
+          ...a,
+          [b.key]: !localStorageValue ? defaultOptIn : localStorageValue === 'true',
         }
       }, {})
     )
@@ -61,12 +57,8 @@ export const FeaturePreviewContextProvider = ({ children }: PropsWithChildren<{}
   const value = {
     flags,
     onUpdateFlag: (key: string, value: boolean) => {
-      try {
-        if (typeof window !== 'undefined' && window.localStorage) {
-          window.localStorage.setItem(key, value ? 'true' : 'false')
-        }
-      } catch {
-        // Silently fail in restricted storage modes (e.g. Safari private browsing)
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, value.toString())
       }
       const updatedFlags = { ...flags, [key]: value }
       setFlags(updatedFlags)
@@ -77,6 +69,11 @@ export const FeaturePreviewContextProvider = ({ children }: PropsWithChildren<{}
 }
 
 // Helpers
+
+export const useIsAPIDocsSidePanelEnabled = () => {
+  const { flags } = useFeaturePreviewContext()
+  return flags[LOCAL_STORAGE_KEYS.UI_PREVIEW_API_SIDE_PANEL]
+}
 
 export const useIsColumnLevelPrivilegesEnabled = () => {
   const { flags } = useFeaturePreviewContext()

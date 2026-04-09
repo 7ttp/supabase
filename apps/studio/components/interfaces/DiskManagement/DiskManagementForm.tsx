@@ -23,7 +23,7 @@ import { CreateDiskStorageSchema, DiskStorageSchemaType } from './DiskManagement
 import { DiskManagementMessage } from './DiskManagement.types'
 import { mapComputeSizeNameToAddonVariantId } from './DiskManagement.utils'
 import { DiskMangementRestartRequiredSection } from './DiskManagementRestartRequiredSection'
-import { DiskManagementReviewAndSubmitDialog } from './DiskManagementReviewAndSubmitDialog/DiskManagementReviewAndSubmitDialog'
+import { DiskManagementReviewAndSubmitDialog } from './DiskManagementReviewAndSubmitDialog'
 import { AutoScaleFields } from './fields/AutoScaleFields'
 import { ComputeSizeField } from './fields/ComputeSizeField'
 import { DiskSizeField } from './fields/DiskSizeField'
@@ -73,7 +73,7 @@ import { DOCS_URL, GB, PROJECT_STATUS } from '@/lib/constants'
 
 export function DiskManagementForm() {
   const { ref: projectRef } = useParams()
-  const { data: project, isPending: isProjectPending } = useSelectedProjectQuery()
+  const { data: project } = useSelectedProjectQuery()
   const { data: org } = useSelectedOrganizationQuery()
   const { setProjectStatus } = useSetProjectStatus()
 
@@ -237,8 +237,6 @@ export function DiskManagementForm() {
   const isProjectRequestingDiskChanges = isRequestingChanges && !isProjectResizing
   const noPermissions = isPermissionsLoaded && !canUpdateDiskConfiguration
 
-  const isDiskNoticeVisible = !isProjectPending && !(isAws || isAwsNimbus)
-
   const { mutateAsync: updateDiskConfiguration, isPending: isUpdatingDisk } =
     useUpdateDiskAttributesMutation({
       // this is to suppress to toast message
@@ -381,14 +379,14 @@ export function DiskManagementForm() {
           <ScaffoldContainer className="relative flex flex-col gap-10" bottomPadding>
             <ComputeSizeField form={form} disabled={disableComputeInputs} />
 
-            {isDiskNoticeVisible && <Separator />}
+            {!(isAws || isAwsNimbus) && <Separator />}
 
             <SpendCapDisabledSection />
 
             <div className="flex flex-col gap-y-4">
               <NoticeBar
                 type="default"
-                visible={isDiskNoticeVisible}
+                visible={!(isAws || isAwsNimbus)}
                 title="Disk configuration is only available for projects in the AWS cloud provider"
                 description={
                   isAwsK8s

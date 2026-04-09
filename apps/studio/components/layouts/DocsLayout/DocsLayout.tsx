@@ -4,6 +4,7 @@ import { ReactElement } from 'react'
 
 import { ProjectLayout } from '../ProjectLayout'
 import { generateDocsMenu, getActivePage } from './DocsLayout.utils'
+import { useIsAPIDocsSidePanelEnabled } from '@/components/interfaces/App/FeaturePreview/FeaturePreviewContext'
 import Error from '@/components/ui/Error'
 import { ProductMenu } from '@/components/ui/ProductMenu'
 import { useOpenAPISpecQuery } from '@/data/open-api/api-spec-query'
@@ -24,7 +25,8 @@ function DocsLayout({ title, children }: { title: string; children: ReactElement
     error,
   } = useOpenAPISpecQuery({ projectRef: ref }, { enabled: !isPaused })
 
-  const hideMenu = router.pathname.endsWith('/graphiql')
+  const isNewAPIDocsEnabled = useIsAPIDocsSidePanelEnabled()
+  const hideMenu = isNewAPIDocsEnabled && router.pathname.endsWith('/graphiql')
 
   const { projectAuthAll: authEnabled } = useIsFeatureEnabled(['project_auth:all'])
 

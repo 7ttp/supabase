@@ -1,11 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, renderHook, type RenderOptions } from '@testing-library/react'
+import { type RenderOptions, render, renderHook } from '@testing-library/react'
 import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
-import { TooltipProvider } from 'ui'
-
 // End of third-party imports
 
-import { ProfileContext, type ProfileContextType } from '@/lib/profile'
+import { ProfileContext, type ProfileContextType } from 'lib/profile'
+import { TooltipProvider } from 'ui'
 
 type AdapterProps = Partial<Parameters<typeof NuqsTestingAdapter>[0]>
 

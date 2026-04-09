@@ -2,14 +2,11 @@ import pgMeta from '@supabase/pg-meta'
 import { generateText, ModelMessage, stepCountIs } from 'ai'
 import { IS_PLATFORM } from 'common'
 import { source } from 'common-tags'
-import { NextApiRequest, NextApiResponse } from 'next'
-import z from 'zod'
-
-import { executeSql } from '@/data/sql/execute-sql-query'
-import { AiOptInLevel } from '@/hooks/misc/useOrgOptedIntoAi'
-import { getOrgAIDetails } from '@/lib/ai/ai-details'
-import { getModel } from '@/lib/ai/model'
-import { DEFAULT_COMPLETION_MODEL } from '@/lib/ai/model.utils'
+import { executeSql } from 'data/sql/execute-sql-query'
+import { AiOptInLevel } from 'hooks/misc/useOrgOptedIntoAi'
+import { getModel } from 'lib/ai/model'
+import { DEFAULT_COMPLETION_MODEL } from 'lib/ai/model.utils'
+import { getOrgAIDetails } from 'lib/ai/org-ai-details'
 import {
   EDGE_FUNCTION_PROMPT,
   GENERAL_PROMPT,
@@ -17,10 +14,12 @@ import {
   PG_BEST_PRACTICES,
   RLS_PROMPT,
   SECURITY_PROMPT,
-} from '@/lib/ai/prompts'
-import { getTools } from '@/lib/ai/tools'
-import apiWrapper from '@/lib/api/apiWrapper'
-import { executeQuery } from '@/lib/api/self-hosted/query'
+} from 'lib/ai/prompts'
+import { getTools } from 'lib/ai/tools'
+import apiWrapper from 'lib/api/apiWrapper'
+import { executeQuery } from 'lib/api/self-hosted/query'
+import { NextApiRequest, NextApiResponse } from 'next'
+import z from 'zod'
 
 export const maxDuration = 60
 
@@ -59,6 +58,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const { aiOptInLevel: orgAIOptInLevel } = await getOrgAIDetails({
         orgSlug,
         authorization,
+        projectRef,
       })
 
       aiOptInLevel = orgAIOptInLevel

@@ -135,7 +135,7 @@ export const AuditLogs = () => {
     })
     ?.filter((log) => {
       if (filters.projects.length > 0) {
-        return filters.projects.includes(log.target.metadata.ref || '')
+        return filters.projects.includes(log.target.metadata.project_ref || '')
       } else {
         return log
       }

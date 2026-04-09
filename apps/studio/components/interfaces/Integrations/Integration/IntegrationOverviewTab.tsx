@@ -16,7 +16,6 @@ export interface IntegrationOverviewTabProps {
   hideRequiredExtensionsSection?: boolean
 }
 
-/** [Joshen] This will eventually get replaced by IntegrationOverviewTabV2 */
 export const IntegrationOverviewTab = ({
   actions,
   alert,

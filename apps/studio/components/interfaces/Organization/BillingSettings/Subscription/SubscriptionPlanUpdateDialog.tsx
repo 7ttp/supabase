@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useMemo, useRef, useState } from 'react'
 import { plans as subscriptionsPlans } from 'shared-data/plans'
 import { toast } from 'sonner'
-import { Button, cn, Dialog, DialogContent, Table, TableBody, TableCell, TableRow } from 'ui'
+import { Button, Dialog, DialogContent, Table, TableBody, TableCell, TableRow } from 'ui'
 import { Admonition } from 'ui-patterns'
 import { InfoTooltip } from 'ui-patterns/info-tooltip'
 import { ShimmeringLoader } from 'ui-patterns/ShimmeringLoader'
@@ -21,7 +21,6 @@ import {
 } from '@/components/interfaces/Billing/Subscription/Subscription.utils'
 import AlertError from '@/components/ui/AlertError'
 import { OrganizationBillingSubscriptionPreviewData } from '@/data/organizations/organization-billing-subscription-preview'
-import type { CustomerAddress, CustomerTaxId } from '@/data/organizations/types'
 import { OrgProject } from '@/data/projects/org-projects-infinite-query'
 import { useConfirmPendingSubscriptionChangeMutation } from '@/data/subscriptions/org-subscription-confirm-pending-change'
 import { useOrgSubscriptionUpdateMutation } from '@/data/subscriptions/org-subscription-update-mutation'
@@ -65,16 +64,11 @@ interface Props {
   planMeta: any
   subscriptionPreviewError: any
   subscriptionPreviewIsLoading: boolean
-  subscriptionPreviewIsFetching: boolean
   subscriptionPreviewInitialized: boolean
   subscriptionPreview: OrganizationBillingSubscriptionPreviewData | undefined
   subscription: any
   currentPlanMeta: any
   projects: OrgProject[]
-  onAddressChange?: (address: CustomerAddress) => void
-  onTaxIdChange?: (taxId: CustomerTaxId | null) => void
-  useAsDefaultBillingAddress: boolean
-  onUseAsDefaultBillingAddressChange: (useAsDefault: boolean) => void
 }
 
 export const SubscriptionPlanUpdateDialog = ({
@@ -83,16 +77,11 @@ export const SubscriptionPlanUpdateDialog = ({
   planMeta,
   subscriptionPreviewError,
   subscriptionPreviewIsLoading,
-  subscriptionPreviewIsFetching,
   subscriptionPreviewInitialized,
   subscriptionPreview,
   subscription,
   currentPlanMeta,
   projects,
-  onAddressChange,
-  onTaxIdChange,
-  useAsDefaultBillingAddress,
-  onUseAsDefaultBillingAddressChange,
 }: Props) => {
   const { resolvedTheme } = useTheme()
   const { data: selectedOrganization } = useSelectedOrganizationQuery()
@@ -336,22 +325,16 @@ export const SubscriptionPlanUpdateDialog = ({
           <div className="p-8 pb-8 flex flex-col xl:col-span-3">
             <div className="flex-1">
               <div>
-                {!billingViaPartner &&
-                  subscriptionPreviewInitialized &&
-                  changeType === 'upgrade' && (
-                    <div className="space-y-2 mb-4">
-                      <PaymentMethodSelection
-                        ref={paymentMethodSelectionRef}
-                        selectedPaymentMethod={selectedPaymentMethod}
-                        onSelectPaymentMethod={(pm) => setSelectedPaymentMethod(pm)}
-                        readOnly={paymentConfirmationLoading || isConfirming || isUpdating}
-                        onAddressChange={onAddressChange}
-                        onTaxIdChange={onTaxIdChange}
-                        useAsDefaultBillingAddress={useAsDefaultBillingAddress}
-                        onUseAsDefaultBillingAddressChange={onUseAsDefaultBillingAddressChange}
-                      />
-                    </div>
-                  )}
+                {!billingViaPartner && subscriptionPreview != null && changeType === 'upgrade' && (
+                  <div className="space-y-2 mb-4">
+                    <PaymentMethodSelection
+                      ref={paymentMethodSelectionRef}
+                      selectedPaymentMethod={selectedPaymentMethod}
+                      onSelectPaymentMethod={(pm) => setSelectedPaymentMethod(pm)}
+                      readOnly={paymentConfirmationLoading || isConfirming || isUpdating}
+                    />
+                  </div>
+                )}
 
                 {billingViaPartner && (
                   <div className="mb-4">
@@ -385,12 +368,7 @@ export const SubscriptionPlanUpdateDialog = ({
               )}
               {subscriptionPreviewInitialized && (
                 <>
-                  <div
-                    className={cn(
-                      'mt-2 mb-4 text-foreground-light text-sm transition-opacity',
-                      subscriptionPreviewIsFetching && 'opacity-50'
-                    )}
-                  >
+                  <div className="mt-2 mb-4 text-foreground-light text-sm">
                     {breakdownItems.map((item, i) =>
                       item.type === 'amount' ? (
                         <div
@@ -690,7 +668,7 @@ export const SubscriptionPlanUpdateDialog = ({
               <div className="flex space-x-2">
                 <Button
                   loading={isUpdating || paymentConfirmationLoading || isConfirming}
-                  disabled={subscriptionPreviewIsLoading || subscriptionPreviewIsFetching}
+                  disabled={subscriptionPreviewIsLoading}
                   type="primary"
                   onClick={onUpdateSubscription}
                   className="flex-1"

@@ -20,9 +20,14 @@ export const InstallationError = ({
   installing?: boolean
   uninstalling?: boolean
 }) => {
+  const { data: project } = useSelectedProjectQuery()
+
   const {
     schemaComment: { errorMessage },
-  } = useStripeSyncStatus()
+  } = useStripeSyncStatus({
+    projectRef: project?.ref,
+    connectionString: project?.connectionString,
+  })
 
   if (error === 'uninstall') {
     return (

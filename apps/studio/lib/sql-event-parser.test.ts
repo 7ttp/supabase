@@ -1,6 +1,5 @@
 import { TABLE_EVENT_ACTIONS } from 'common/telemetry-constants'
 import { describe, expect, it } from 'vitest'
-
 import { sqlEventParser } from './sql-event-parser'
 
 describe('SQL Event Parser', () => {

@@ -1,8 +1,9 @@
 import { noop } from 'lodash'
-import { PropsWithChildren, useCallback, useState } from 'react'
-import { Button, KeyboardShortcut } from 'ui'
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { Button } from 'ui'
 
 import { useHotKey } from '@/hooks/ui/useHotKey'
+import { getModKeyLabel } from '@/lib/helpers'
 
 interface ActionBarProps {
   loading?: boolean
@@ -29,6 +30,7 @@ export const ActionBar = ({
   visible = true,
 }: PropsWithChildren<ActionBarProps>) => {
   const [isRunning, setIsRunning] = useState(false)
+  const modKeyLabel = useMemo(() => getModKeyLabel(), [])
 
   const onSelectApply = useCallback(async () => {
     const applyCallback = () => new Promise((resolve) => applyFunction?.(resolve))
@@ -88,13 +90,9 @@ export const ActionBar = ({
             onClick={onSelectApply}
             disabled={disableApply || isRunning || loading}
             loading={isRunning || loading}
-            iconRight={
-              isRunning || loading ? undefined : (
-                <KeyboardShortcut keys={['Meta', 'Enter']} variant="inline" />
-              )
-            }
           >
-            {applyButtonLabel}
+            <span>{applyButtonLabel}</span>
+            <span className="ml-2 text-xs text-foreground-lighter">{modKeyLabel}↵</span>
           </Button>
         ) : !hideApply ? (
           // New solution, when using the Form component, loading is handled by the Form itself
@@ -105,11 +103,9 @@ export const ActionBar = ({
             data-testid="action-bar-save-row"
             htmlType="submit"
             form={formId}
-            iconRight={
-              loading ? undefined : <KeyboardShortcut keys={['Meta', 'Enter']} variant="inline" />
-            }
           >
-            {applyButtonLabel}
+            <span>{applyButtonLabel}</span>
+            <span className="ml-2 text-xs text-foreground-lighter">{modKeyLabel}↵</span>
           </Button>
         ) : (
           <div />

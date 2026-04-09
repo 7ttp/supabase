@@ -1,11 +1,10 @@
 import { PermissionAction } from '@supabase/shared-types/out/constants'
-import { useDebounce } from '@uidotdev/usehooks'
 import { useParams } from 'common'
 import { StudioPricingSidePanelOpenedEvent } from 'common/telemetry-constants'
 import { isArray } from 'lodash'
 import { Check, ExternalLink } from 'lucide-react'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { plans as subscriptionsPlans } from 'shared-data/plans'
 import { Button, cn, SidePanel } from 'ui'
 import { ShimmeringLoader } from 'ui-patterns/ShimmeringLoader'
@@ -23,7 +22,6 @@ import { RequestUpgradeToBillingOwners } from '@/components/ui/RequestUpgradeToB
 import { useFreeProjectLimitCheckQuery } from '@/data/organizations/free-project-limit-check-query'
 import { useOrganizationBillingSubscriptionPreview } from '@/data/organizations/organization-billing-subscription-preview'
 import { useOrganizationQuery } from '@/data/organizations/organization-query'
-import type { CustomerAddress, CustomerTaxId } from '@/data/organizations/types'
 import { useOrgProjectsInfiniteQuery } from '@/data/projects/org-projects-infinite-query'
 import { useOrgPlansQuery } from '@/data/subscriptions/org-plans-query'
 import { useOrgSubscriptionQuery } from '@/data/subscriptions/org-subscription-query'
@@ -63,26 +61,6 @@ export const PlanUpdateSidePanel = () => {
   const [showUpgradeSurvey, setShowUpgradeSurvey] = useState(false)
   const [showDowngradeError, setShowDowngradeError] = useState(false)
   const [selectedTier, setSelectedTier] = useState<'tier_free' | 'tier_pro' | 'tier_team'>()
-  const [latestAddress, setLatestAddress] = useState<CustomerAddress>()
-  const [latestTaxId, setLatestTaxId] = useState<CustomerTaxId | null>()
-  const [useAsDefaultBillingAddress, setUseAsDefaultBillingAddress] = useState(true)
-
-  const billingAddress = useAsDefaultBillingAddress ? latestAddress : undefined
-  const billingTaxId = useAsDefaultBillingAddress ? latestTaxId : null
-  const debouncedAddress = useDebounce(billingAddress, 1000)
-  const debouncedTaxId = useDebounce(billingTaxId, 1000)
-
-  const handleAddressChange = useCallback(
-    (address: CustomerAddress) => setLatestAddress(address),
-    []
-  )
-
-  const handleTaxIdChange = useCallback((taxId: CustomerTaxId | null) => setLatestTaxId(taxId), [])
-
-  const handleUseAsDefaultBillingAddressChange = useCallback(
-    (useAsDefault: boolean) => setUseAsDefaultBillingAddress(useAsDefault),
-    []
-  )
 
   const { can: canUpdateSubscription } = useAsyncCheckPermissions(
     PermissionAction.BILLING_WRITE,
@@ -126,14 +104,8 @@ export const PlanUpdateSidePanel = () => {
     data: subscriptionPreview,
     error: subscriptionPreviewError,
     isPending: subscriptionPreviewIsLoading,
-    isFetching: subscriptionPreviewIsFetching,
     isSuccess: subscriptionPreviewInitialized,
-  } = useOrganizationBillingSubscriptionPreview({
-    tier: selectedTier,
-    organizationSlug: slug,
-    address: debouncedAddress,
-    taxId: debouncedTaxId ?? undefined,
-  })
+  } = useOrganizationBillingSubscriptionPreview({ tier: selectedTier, organizationSlug: slug })
 
   const availablePlans: OrgPlan[] = plans?.plans ?? []
   const hasMembersExceedingFreeTierLimit =
@@ -146,9 +118,6 @@ export const PlanUpdateSidePanel = () => {
   useEffect(() => {
     if (visible) {
       setSelectedTier(undefined)
-      setLatestAddress(undefined)
-      setLatestTaxId(undefined)
-      setUseAsDefaultBillingAddress(true)
       const source = Array.isArray(router.query.source)
         ? router.query.source[0]
         : router.query.source
@@ -194,7 +163,7 @@ export const PlanUpdateSidePanel = () => {
         visible={visible}
         onCancel={() => onClose()}
         header={
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between">
             <h4>Change subscription plan for {selectedOrganization?.name}</h4>
             <Button asChild type="default" icon={<ExternalLink />}>
               <a href="https://supabase.com/pricing" target="_blank" rel="noreferrer">
@@ -373,7 +342,6 @@ export const PlanUpdateSidePanel = () => {
         planMeta={planMeta}
         subscriptionPreviewError={subscriptionPreviewError}
         subscriptionPreviewIsLoading={subscriptionPreviewIsLoading}
-        subscriptionPreviewIsFetching={subscriptionPreviewIsFetching}
         subscriptionPreviewInitialized={subscriptionPreviewInitialized}
         subscriptionPreview={subscriptionPreview}
         subscription={subscription}
@@ -384,10 +352,6 @@ export const PlanUpdateSidePanel = () => {
             subscriptionsPlans.find((plan) => plan.id === `tier_${subscription?.plan?.id}`)
               ?.features || [],
         }}
-        onAddressChange={handleAddressChange}
-        onTaxIdChange={handleTaxIdChange}
-        useAsDefaultBillingAddress={useAsDefaultBillingAddress}
-        onUseAsDefaultBillingAddressChange={handleUseAsDefaultBillingAddressChange}
       />
 
       <MembersExceedLimitModal

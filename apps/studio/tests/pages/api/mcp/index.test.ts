@@ -1,8 +1,7 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createMocks } from 'node-mocks-http'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-
+import { mswServer } from 'tests/lib/msw'
 import handler from '../../../../pages/api/mcp/index'
-import { mswServer } from '@/tests/lib/msw'
 
 // Mock the MCP SDK and Supabase MCP server to avoid Hono/node-mocks-http compatibility issues.
 //

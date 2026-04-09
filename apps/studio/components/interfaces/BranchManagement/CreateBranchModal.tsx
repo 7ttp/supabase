@@ -254,9 +254,8 @@ export const CreateBranchModal = () => {
             if (form.getValues('gitBranchName') !== branchName) return
             setIsGitBranchValid(false)
             form.setError('gitBranchName', {
-              message:
-                error?.message ??
-                `Unable to find branch "${branchName}" in ${repoOwner}/${repoName}`,
+              ...error,
+              message: `Unable to find branch "${branchName}" in ${repoOwner}/${repoName}`,
             })
           },
         }

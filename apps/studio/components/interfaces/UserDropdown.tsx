@@ -106,7 +106,7 @@ export function UserDropdown({
                 <FlaskConical size={14} strokeWidth={1.5} className="text-foreground-lighter" />
                 Feature previews
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex gap-2 cursor-pointer" asChild>
+              <DropdownMenuItem className="flex gap-2" asChild>
                 <Link
                   href="https://supabase.com/changelog"
                   target="_blank"

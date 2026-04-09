@@ -1,7 +1,6 @@
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Link, Plus, Settings, X } from 'lucide-react'
+import { Link, Menu, Plus, Settings, X } from 'lucide-react'
 import { useState } from 'react'
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 import {
   Badge,
   Button,
@@ -57,6 +56,7 @@ interface ColumnProps {
   isNewRecord: boolean
   hasForeignKeys: boolean
   hasImportContent: boolean
+  dragHandleProps?: DraggableProvidedDragHandleProps | null
   onUpdateColumn: (changes: Partial<ColumnField>) => void
   onRemoveColumn: () => void
   onEditForeignKey: (relation?: ForeignKey) => void
@@ -69,6 +69,7 @@ export const Column = ({
   isNewRecord = false,
   hasForeignKeys = false,
   hasImportContent = false,
+  dragHandleProps,
   onUpdateColumn,
   onRemoveColumn,
   onEditForeignKey,
@@ -107,28 +108,12 @@ export const Column = ({
     .map((r) => getRelationStatus(r))
     .some((x) => x !== undefined)
 
-  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition } =
-    useSortable({
-      id: column.id,
-    })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  }
-
   return (
-    <div className="flex w-full items-center" ref={setNodeRef} style={style}>
+    <div className="flex w-full items-center">
       <div className={`w-[5%] ${!isNewRecord ? 'hidden' : ''}`}>
-        <button
-          ref={setActivatorNodeRef}
-          {...attributes}
-          {...listeners}
-          className="opacity-50 hover:opacity-100 disabled:hover:opacity-50 transition cursor-grab text-foreground"
-          type="button"
-        >
-          <GripVertical size={16} strokeWidth={1.5} />
-        </button>
+        <div className="cursor-drag" {...dragHandleProps}>
+          <Menu strokeWidth={1} size={16} />
+        </div>
       </div>
       <div className="w-[25%]">
         <div className="flex w-[95%] items-center justify-between">

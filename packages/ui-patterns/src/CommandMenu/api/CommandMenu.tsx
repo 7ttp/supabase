@@ -3,7 +3,7 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { useBreakpoint } from 'common'
 import useDragToClose from 'common/hooks/useDragToClose'
-import { AlertTriangle, ArrowLeft, Search } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Command, Search } from 'lucide-react'
 import type { HTMLAttributes, MouseEvent, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { Children, cloneElement, forwardRef, isValidElement, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -15,7 +15,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
-  KeyboardShortcut,
 } from 'ui'
 
 import { useCurrentPage, usePageComponent, usePopPage } from './hooks/pagesHooks'
@@ -203,12 +202,15 @@ function CommandMenuTriggerInput({
           <p className="flex text-xs pr-2 text-foreground-muted">{placeholder}</p>
         </div>
         {showShortcut && (
-          <span aria-hidden="true">
-            <KeyboardShortcut
-              keys={['Meta', 'k']}
-              className="command-shortcut hidden md:inline-flex h-full border border-default bg-surface-300 text-foreground-lighter shadow-xs shadow-background-surface-100"
-            />
-          </span>
+          <div className="command-shortcut hidden md:flex items-center space-x-1">
+            <div
+              aria-hidden="true"
+              className="md:flex items-center justify-center h-full px-1 border rounded bg-surface-300 gap-0.5"
+            >
+              <Command size={12} strokeWidth={1.5} />
+              <span className="text-[12px]">K</span>
+            </div>
+          </div>
         )}
       </button>
     </CommandMenuTrigger>

@@ -27,7 +27,6 @@ import type {
 import { resolveFrameworkLibraryKey } from './Connect.utils'
 import { Database, useReadReplicasQuery } from '@/data/read-replicas/replicas-query'
 import { formatDatabaseID, formatDatabaseRegion } from '@/data/read-replicas/replicas.utils'
-import { useCheckEntitlements } from '@/hooks/misc/useCheckEntitlements'
 
 // ============================================================================
 // Data Source Helpers
@@ -195,7 +194,6 @@ export interface UseConnectStateReturn {
 export function useConnectState(initialState?: Partial<ConnectState>): UseConnectStateReturn {
   const { ref: projectRef } = useParams()
   const { data: databases = [] } = useReadReplicasQuery({ projectRef })
-  const { hasAccess: hasDedicatedPooler } = useCheckEntitlements('dedicated_pooler')
 
   const [state, setState] = useState<ConnectState>(() => {
     const defaults = getDefaultState({ schema: connectSchema })
@@ -320,13 +318,7 @@ export function useConnectState(initialState?: Partial<ConnectState>): UseConnec
     [projectRef]
   )
 
-  const activeFields = useMemo(() => {
-    const fields = getActiveFields(connectSchema, state)
-    if (!hasDedicatedPooler) {
-      return fields.filter((f) => f.id !== 'useSharedPooler')
-    }
-    return fields
-  }, [state, hasDedicatedPooler])
+  const activeFields = useMemo(() => getActiveFields(connectSchema, state), [state])
 
   const resolvedSteps = useMemo(() => resolveSteps(connectSchema, state), [state])
 

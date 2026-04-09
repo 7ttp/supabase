@@ -15,6 +15,7 @@ export const LOCAL_STORAGE_KEYS = {
   MAINTENANCE_BANNER_DISMISSED: (id: string) => `maintenance-banner-dismissed-${id}`,
   DASHBOARD_PREFERENCES: (ref: string) => `dashboard-preferences-${ref}`,
 
+  UI_PREVIEW_API_SIDE_PANEL: 'supabase-ui-api-side-panel',
   UI_PREVIEW_CLS: 'supabase-ui-cls',
   UI_PREVIEW_INLINE_EDITOR: 'supabase-ui-preview-inline-editor',
   UI_PREVIEW_UNIFIED_LOGS: 'supabase-ui-preview-unified-logs',
@@ -152,6 +153,7 @@ const LOCAL_STORAGE_KEYS_ALLOWLIST = [
   'supabase.dashboard.auth.debug',
   'supabase.dashboard.auth.navigatorLock.disabled',
   LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT,
+  LOCAL_STORAGE_KEYS.UI_PREVIEW_API_SIDE_PANEL,
   LOCAL_STORAGE_KEYS.UI_PREVIEW_INLINE_EDITOR,
   LOCAL_STORAGE_KEYS.UI_PREVIEW_QUEUE_OPERATIONS,
   LOCAL_STORAGE_KEYS.UI_PREVIEW_CLS,

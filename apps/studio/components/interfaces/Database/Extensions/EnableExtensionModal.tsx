@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { type DatabaseExtension } from 'data/database-extensions/database-extensions-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import {
@@ -30,7 +31,6 @@ import * as z from 'zod'
 import { extensionsWithRecommendedSchemas } from './Extensions.constants'
 import { DocsButton } from '@/components/ui/DocsButton'
 import { useDatabaseExtensionEnableMutation } from '@/data/database-extensions/database-extension-enable-mutation'
-import { type DatabaseExtension } from '@/data/database-extensions/database-extensions-query'
 import { useSchemasQuery } from '@/data/database/schemas-query'
 import { useIsOrioleDb, useSelectedProjectQuery } from '@/hooks/misc/useSelectedProject'
 import { useProtectedSchemas } from '@/hooks/useProtectedSchemas'

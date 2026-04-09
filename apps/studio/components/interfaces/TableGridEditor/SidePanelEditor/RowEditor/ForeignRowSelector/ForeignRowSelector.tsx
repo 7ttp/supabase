@@ -2,6 +2,8 @@ import { keepPreviousData } from '@tanstack/react-query'
 import { useParams } from 'common'
 import { Loader2, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Button, SidePanel } from 'ui'
 
 import { ForeignKey } from '../../ForeignKeySelector/ForeignKeySelector.types'
@@ -214,7 +216,9 @@ export const ForeignRowSelector = ({
                   <div className="flex items-center">
                     <RefreshButton tableId={table?.id} isRefetching={isRefetching} />
                     <FilterPopoverPrimitive filters={filters} onApplyFilters={onApplyFilters} />
-                    <SortPopoverPrimitive sorts={sorts} onApplySorts={onApplySorts} />
+                    <DndProvider backend={HTML5Backend} context={window}>
+                      <SortPopoverPrimitive sorts={sorts} onApplySorts={onApplySorts} />
+                    </DndProvider>
                   </div>
 
                   <div className="flex items-center gap-x-3 divide-x">
