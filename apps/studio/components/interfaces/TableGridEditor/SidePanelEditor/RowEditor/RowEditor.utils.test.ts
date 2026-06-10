@@ -742,4 +742,51 @@ describe('generateRowObjectFromFields - additional cases', () => {
     const result = generateRowObjectFromFields({ fields })
     expect(result).toEqual({})
   })
+
+  it('should omit cleared identity fields on insert', () => {
+    const fields: RowField[] = [
+      createField({
+        name: 'id',
+        format: 'int8',
+        value: '',
+        isIdentity: true,
+        isNullable: false,
+      }),
+      createField({
+        name: 'name',
+        format: 'text',
+        value: 'test',
+      }),
+    ]
+    const result = generateRowObjectFromFields({ fields })
+    expect(result).toEqual({ name: 'test' })
+  })
+
+  it('should keep cleared identity fields when includeUndefinedValues is true', () => {
+    const fields: RowField[] = [
+      createField({
+        name: 'id',
+        format: 'int8',
+        value: '',
+        isIdentity: true,
+        isNullable: false,
+      }),
+    ]
+    const result = generateRowObjectFromFields({ fields, includeUndefinedValues: true })
+    expect(result).toEqual({ id: '' })
+  })
+
+  it('should omit cleared default-backed non-text fields on insert', () => {
+    const fields: RowField[] = [
+      createField({
+        name: 'token',
+        format: 'uuid',
+        value: '',
+        defaultValue: 'gen_random_uuid()',
+        isNullable: false,
+      }),
+    ]
+    const result = generateRowObjectFromFields({ fields })
+    expect(result).toEqual({})
+  })
 })
