@@ -33,6 +33,7 @@ import {
   type TablesData,
 } from '@/data/tables/tables-query'
 import { useAsyncCheckPermissions } from '@/hooks/misc/useCheckPermissions'
+import { useProtectedSchemas } from '@/hooks/useProtectedSchemas'
 import { useSelectedProjectQuery } from '@/hooks/misc/useSelectedProject'
 import { useProfile } from '@/lib/profile'
 
@@ -298,6 +299,7 @@ export function useQueryTableCommands(options?: CommandOptions) {
 function TableSelector() {
   const router = useRouter()
   const { data: project } = useSelectedProjectQuery()
+  const { data: protectedSchemas = [] } = useProtectedSchemas()
 
   const [filterString, setFilterString] = useState('')
   const debouncedFilterString = useDebounce(filterString, 300)
@@ -322,7 +324,10 @@ function TableSelector() {
     pageSize: 50,
     nameFilter: debouncedFilterString,
   })
-  const tables = tablesData?.pages.flat() ?? []
+  const tables =
+    tablesData?.pages
+      .flat()
+      .filter((table) => !protectedSchemas.find((schema) => schema.name === table.schema)) ?? []
 
   useEffect(() => {
     if (
@@ -389,7 +394,7 @@ function TableSelector() {
                       </span>
                     ) : (
                       <span>
-                        Total: {tables.length} {tables.length === 1 ? 'table' : 'tables'}
+                        {tables.length} {tables.length === 1 ? 'table' : 'tables'}
                         {hasNextTablesPage ? ' loaded' : ''}
                       </span>
                     )}

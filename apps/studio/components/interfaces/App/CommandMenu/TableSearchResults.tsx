@@ -120,7 +120,7 @@ export function TableSearchResults({ debouncedFilterString }: TableSearchResults
                   </span>
                 ) : (
                   <span>
-                    Total: {totalTables.toLocaleString()} table{totalTables !== 1 ? 's' : ''}
+                    {totalTables.toLocaleString()} table{totalTables !== 1 ? 's' : ''}
                     {hasNextTablesPage ? ' loaded' : ''}
                   </span>
                 )}
