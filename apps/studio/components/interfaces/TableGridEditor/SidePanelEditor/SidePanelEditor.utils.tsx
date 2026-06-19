@@ -53,6 +53,7 @@ import {
 import { getTables } from '@/data/tables/tables-query'
 import { isObject, isObjectContainingKeys, timeout, tryParseJson } from '@/lib/helpers'
 import type { SafePostgresColumn } from '@/lib/postgres-types'
+import { wrapWithRoleImpersonation, type RoleImpersonationState } from '@/lib/role-impersonation'
 import type { useTrack } from '@/lib/telemetry/track'
 import type { DeepReadonly } from '@/lib/type-helpers'
 import type { SidePanel } from '@/state/table-editor'
@@ -984,6 +985,7 @@ export async function insertRowsViaSpreadsheet({
   connectionString,
   file,
   table,
+  roleImpersonationState,
   selectedHeaders,
   emptyStringAsNullHeaders = selectedHeaders,
   onProgressUpdate,
@@ -992,6 +994,7 @@ export async function insertRowsViaSpreadsheet({
   connectionString: string | undefined | null
   file: File
   table: RetrieveTableResult
+  roleImpersonationState?: RoleImpersonationState
   selectedHeaders: string[]
   emptyStringAsNullHeaders?: string[]
   onProgressUpdate: (progress: number) => void
@@ -1017,7 +1020,11 @@ export async function insertRowsViaSpreadsheet({
           emptyStringAsNullHeaders,
         })
 
-        const insertQuery = new Query().from(table.name, table.schema).insert(formattedData).toSql()
+        const insertQuery = getInsertRowsSql({
+          table,
+          rows: formattedData,
+          roleImpersonationState,
+        })
         try {
           await executeWithRetry(() =>
             executeSql({ projectRef, connectionString, sql: insertQuery })
@@ -1084,6 +1091,7 @@ export async function insertTableRows({
   projectRef,
   connectionString,
   table,
+  roleImpersonationState,
   rows,
   selectedHeaders,
   emptyStringAsNullHeaders = selectedHeaders,
@@ -1092,6 +1100,7 @@ export async function insertTableRows({
   projectRef: string
   connectionString: string | undefined | null
   table: RetrieveTableResult
+  roleImpersonationState?: RoleImpersonationState
   rows: unknown[]
   selectedHeaders: string[]
   emptyStringAsNullHeaders?: string[]
@@ -1112,7 +1121,11 @@ export async function insertTableRows({
     return () => {
       return Promise.race([
         new Promise(async (resolve, reject) => {
-          const insertQuery = new Query().from(table.name, table.schema).insert(batch).toSql()
+          const insertQuery = getInsertRowsSql({
+            table,
+            rows: batch,
+            roleImpersonationState,
+          })
           try {
             await executeSql({ projectRef, connectionString, sql: insertQuery })
           } catch (error) {
@@ -1175,6 +1188,19 @@ export async function insertTableRows({
   } catch (error) {
     return { error }
   }
+}
+
+export function getInsertRowsSql({
+  table,
+  rows,
+  roleImpersonationState,
+}: {
+  table: Pick<RetrieveTableResult, 'name' | 'schema'>
+  rows: Record<string, unknown>[]
+  roleImpersonationState?: RoleImpersonationState
+}) {
+  const insertQuery = new Query().from(table.name, table.schema).insert(rows).toSql()
+  return wrapWithRoleImpersonation(insertQuery, roleImpersonationState)
 }
 
 const updateForeignKeys = async ({

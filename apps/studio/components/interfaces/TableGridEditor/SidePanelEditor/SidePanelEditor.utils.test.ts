@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
-import { formatRowsForInsert, getRowFromSidePanel } from './SidePanelEditor.utils'
+import { formatRowsForInsert, getInsertRowsSql, getRowFromSidePanel } from './SidePanelEditor.utils'
 import type { SupaRow } from '@/components/grid/types'
+import type { RoleImpersonationState } from '@/lib/role-impersonation'
 import type { SidePanel } from '@/state/table-editor'
 
 describe('SidePanelEditor.utils.test.ts', () => {
@@ -112,6 +113,52 @@ describe('SidePanelEditor.utils.test.ts', () => {
 
     const formattedRows = formatRowsForInsert({ rows, headers, columns: columns as any })
     expect(formattedRows).toEqual([{ id: 1, value: ['item1', 'item2', 'item3'] }])
+  })
+
+  test('getInsertRowsSql wraps import inserts with role impersonation', () => {
+    const roleImpersonationState: RoleImpersonationState = {
+      role: {
+        type: 'postgrest',
+        role: 'authenticated',
+        userType: 'native',
+        aal: 'aal1',
+        user: {
+          id: 'user-123',
+          email: 'test@example.com',
+          providers: [],
+        },
+      },
+      claims: {
+        iss: 'https://test.supabase.co/auth/v1',
+        sub: 'user-123',
+        role: 'authenticated',
+        aud: 'authenticated',
+        aal: 'aal1',
+        session_id: 'session-123',
+        exp: 9999999999,
+        iat: 1234567890,
+      },
+    }
+
+    const sql = getInsertRowsSql({
+      table: { name: 'csv_import_with_default', schema: 'public' },
+      rows: [{ note: 'hello from csv' }],
+      roleImpersonationState,
+    })
+
+    expect(sql).toContain("set_config('role', 'authenticated', true)")
+    expect(sql).toContain('request.jwt.claims')
+    expect(sql).toContain('insert into "public"."csv_import_with_default"')
+  })
+
+  test('getInsertRowsSql leaves inserts unchanged when not impersonating', () => {
+    const sql = getInsertRowsSql({
+      table: { name: 'csv_import_with_default', schema: 'public' },
+      rows: [{ note: 'hello from csv' }],
+    })
+
+    expect(sql).not.toContain("set_config('role'")
+    expect(sql).toContain('insert into "public"."csv_import_with_default"')
   })
 })
 

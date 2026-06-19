@@ -68,6 +68,7 @@ import { isObjectContainingKeys } from '@/lib/helpers'
 import type { SafePostgresTable } from '@/lib/postgres-types'
 import { useTrack } from '@/lib/telemetry/track'
 import type { DeepReadonly, Prettify } from '@/lib/type-helpers'
+import { useGetImpersonatedRoleState } from '@/state/role-impersonation-state'
 import { useTableEditorStateSnapshot, type TableEditorState } from '@/state/table-editor'
 import { createTabId, useTabsStateSnapshot } from '@/state/tabs'
 import type { Dictionary } from '@/types'
@@ -195,6 +196,7 @@ export const SidePanelEditor = ({
   const track = useTrack()
   const queryClient = useQueryClient()
   const { data: project } = useSelectedProjectQuery()
+  const getImpersonatedRoleState = useGetImpersonatedRoleState()
   const isQueueOperationsEnabled = useIsQueueOperationsEnabled()
   const { updateRow, addRow, isEditPending } = useTableRowOperations()
 
@@ -871,6 +873,7 @@ export const SidePanelEditor = ({
         connectionString: project.connectionString,
         file,
         table: selectedTable,
+        roleImpersonationState: getImpersonatedRoleState(),
         selectedHeaders,
         emptyStringAsNullHeaders,
         onProgressUpdate: (progress: number) => {
@@ -895,6 +898,7 @@ export const SidePanelEditor = ({
         projectRef: project.ref!,
         connectionString: project.connectionString,
         table: selectedTable,
+        roleImpersonationState: getImpersonatedRoleState(),
         rows: importContent.rows,
         selectedHeaders,
         emptyStringAsNullHeaders,
