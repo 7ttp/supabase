@@ -1,9 +1,6 @@
-import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
 import { cn, HoverCard, HoverCardContent, HoverCardTrigger, Separator } from 'ui'
 
 import { ServerLightGrid } from './ServerLightGrid'
-import { DOCS_URL } from '@/lib/constants'
 
 interface HighAvailabilityBadgeProps {
   size?: 'default' | 'small'
@@ -36,15 +33,6 @@ export function HighAvailabilityBadge({ size = 'default' }: HighAvailabilityBadg
             A horizontally scalable Postgres architecture that supports highly-available and
             globally distributed deployments.
           </p>
-          <Link
-            href={`${DOCS_URL}/guides/deployment/high-availability`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 inline-flex items-center gap-1 text-xs text-foreground-lighter transition-colors hover:text-foreground"
-          >
-            Read more
-            <ArrowRight size={12} strokeWidth={1.5} />
-          </Link>
         </div>
       </HoverCardContent>
     </HoverCard>
