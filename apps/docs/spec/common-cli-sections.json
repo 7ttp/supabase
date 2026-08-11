@@ -58,6 +58,64 @@
         "title": "Retrieve container status",
         "slug": "supabase-status",
         "type": "cli-command"
+      },
+      {
+        "id": "supabase-completion",
+        "title": "Generate shell autocompletion scripts",
+        "slug": "supabase-completion",
+        "type": "cli-command",
+        "items": [
+          {
+            "id": "supabase-completion-bash",
+            "title": "Autocompletion for bash",
+            "slug": "supabase-completion-bash",
+            "type": "cli-command"
+          },
+          {
+            "id": "supabase-completion-fish",
+            "title": "Autocompletion for fish",
+            "slug": "supabase-completion-fish",
+            "type": "cli-command"
+          },
+          {
+            "id": "supabase-completion-powershell",
+            "title": "Autocompletion for powershell",
+            "slug": "supabase-completion-powershell",
+            "type": "cli-command"
+          },
+          {
+            "id": "supabase-completion-zsh",
+            "title": "Autocompletion for zsh",
+            "slug": "supabase-completion-zsh",
+            "type": "cli-command"
+          }
+        ]
+      },
+      {
+        "id": "supabase-issue",
+        "title": "Open GitHub issue forms",
+        "slug": "supabase-issue",
+        "type": "cli-command",
+        "items": [
+          {
+            "id": "supabase-issue-bug",
+            "title": "Open a bug report",
+            "slug": "supabase-issue-bug",
+            "type": "cli-command"
+          },
+          {
+            "id": "supabase-issue-docs",
+            "title": "Open a documentation issue",
+            "slug": "supabase-issue-docs",
+            "type": "cli-command"
+          },
+          {
+            "id": "supabase-issue-feature",
+            "title": "Open a feature request",
+            "slug": "supabase-issue-feature",
+            "type": "cli-command"
+          }
+        ]
       }
     ]
   },
