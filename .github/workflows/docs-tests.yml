@@ -6,6 +6,10 @@ on:
     paths:
       - 'apps/docs/**/*.ts*'
       - 'apps/docs/spec/**/*.json'
+      # supabase/cli opens its reference-doc PRs touching nothing but this file,
+      # so without this path the spec/sidebar coverage test would not run on
+      # exactly the PRs it exists to guard.
+      - 'apps/docs/spec/cli_v1_commands.yaml'
       - 'apps/docs/.env.development'
       - 'apps/docs/package.json'
       - 'e2e/docs/local-smoke/**'

@@ -252,8 +252,15 @@ async function CliCommandSection({ link, section }: CliCommandSectionProps) {
                   <CodeBlock lang="bash" className="mb-6">
                     {example.code}
                   </CodeBlock>
-                  <h3 className="text-foreground-lighter text-sm mb-2">Response</h3>
-                  <CodeBlock lang="txt">{example.response}</CodeBlock>
+                  {/* Not every example has sample output — those from the CLI's own
+                      `templates/examples.yaml` are invocation-only. Rendering the
+                      heading regardless leaves an empty Response box on the page. */}
+                  {example.response && (
+                    <>
+                      <h3 className="text-foreground-lighter text-sm mb-2">Response</h3>
+                      <CodeBlock lang="txt">{example.response}</CodeBlock>
+                    </>
+                  )}
                 </TabsContent>
               ))}
             </Tabs>
