@@ -151,12 +151,13 @@ export const InviteMemberButton = () => {
     defaultValues,
   })
 
-  const [applyToOrg, projectRef, email] = useWatch({
+  const [applyToOrg, projectRef, email, role] = useWatch({
     control: form.control,
-    name: ['applyToOrg', 'projectRef', 'email'],
+    name: ['applyToOrg', 'projectRef', 'email', 'role'],
   })
 
   const emailCount = parseEmails(email ?? '').length
+  const isOwnerRoleSelected = orgScopedRoles.find((r) => r.id.toString() === role)?.name === 'Owner'
 
   const onInviteMember = async (values: z.infer<typeof FormSchema>) => {
     if (!slug) return console.error('Slug is required')
@@ -367,6 +368,13 @@ export const InviteMemberButton = () => {
                         })}
                       </RadioGroupStacked>
                     </FormControl>
+                    {isOwnerRoleSelected && (
+                      <Admonition
+                        type="warning"
+                        className="mt-2"
+                        description="Owners can remove you and every other owner, delete the organization, and transfer projects away. Administrators can manage members, billing, and projects without this control."
+                      />
+                    )}
                   </FormItemLayout>
                 )}
               />
