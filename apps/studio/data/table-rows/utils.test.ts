@@ -60,12 +60,14 @@ describe('formatFilterValue', () => {
   it('preserves numeric values as strings to avoid precision loss', () => {
     const decimal = '0.123456789012345678901'
     expect(formatFilterValue(table, makeFilter('price', decimal))).toBe(decimal)
+    expect(formatFilterValue(table, makeFilter('price', '0'))).toBe('0')
   })
 
   it.each(['~~', '~~*', '!~~', '!~~*'] as const)(
     'wraps the value in %%...%% for the %s operator when no wildcard is present',
     (operator) => {
       expect(formatFilterValue(table, makeFilter('name', 'al', operator))).toBe('%al%')
+      expect(formatFilterValue(table, makeFilter('price', '5', operator))).toBe('%5%')
     }
   )
 
